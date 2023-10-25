@@ -7,9 +7,9 @@ def main() -> None:
     args = arg_parse()
     file_event = threading.Event()
     stop_processing = threading.Event()
-    # sniff_thread = threading.Thread(target=sniff, args=(args.interface, args.packets_per_file, file_event))
     sniff_thread = threading.Thread(
-        target=sniff, args=("Wi-Fi", 50, file_event, stop_processing)
+        target=sniff,
+        args=(args.interface, args.packets_per_file, file_event, stop_processing),
     )
     process_file_thread = threading.Thread(
         target=process_file, args=(file_event, stop_processing)
