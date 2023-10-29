@@ -42,8 +42,7 @@ def process_file(file_event: threading.Event, stop_processing: threading.Event) 
         )
         input_file_path: str = os.path.join(raw_logs_path, current_log_file)
         subprocess.run(
-            f"echo 'input: {input_file_path}   output: {output_file_path}'", shell=True
+            f"cicflowmeter -f {input_file_path} -c {output_file_path}", shell=True
         )
-        # subprocess.run(f'cicflowmeter -f {current_log_file} -c {output_file_path}', shell=True)
         if stop_processing.is_set():
             break
