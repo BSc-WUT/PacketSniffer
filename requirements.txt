@@ -4,3 +4,4 @@ numpy==1.18
 scapy==2.5.0
 cicflowmeter==0.1.6
 pyshark==0.6
+requests==2.31.0

@@ -29,7 +29,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y tshark
 COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 8000
+EXPOSE 9090
 
 # Run the application.
 CMD python ./app/main.py -i "sshdump" -p 5
