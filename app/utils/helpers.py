@@ -4,7 +4,9 @@ from .global_vars import parsed_logs_path
 
 def load_flows() -> dict:
     logs_file_paths: list = os.listdir(parsed_logs_path)
-    with open(os.path.join(parsed_logs_path, logs_file_paths[0]), 'r') as file_handler:
+    latest_log_file_path: str = max([os.path.join(parsed_logs_path, file_path) for file_path in logs_file_paths], key=os.path.getctime)
+    print(f"Latest file name: {latest_log_file_path}")
+    with open(latest_log_file_path, 'r') as file_handler:
         logs_reader = csv.reader(file_handler)
         columns: list = next(logs_reader)
         for log in logs_reader:

@@ -27,8 +27,6 @@ def save_flow_to_db(db_url: str, flow: dict) -> dict:
     url: str = f'{db_url}/network_flows'
     response = requests.post(url, data=json.dumps(flow))
     handle_response(response, url)
-    print(f'saved flow')
-    print(response.json())
     return response.json()
 
 

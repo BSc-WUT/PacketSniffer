@@ -32,4 +32,4 @@ COPY . .
 EXPOSE 9090
 
 # Run the application.
-CMD python ./app/main.py -i "sshdump" -p 5
+CMD python ./app/main.py
