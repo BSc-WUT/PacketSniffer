@@ -1,10 +1,13 @@
 version: "3.8"
 services:
-  server:
+  sniffer:
     build:
       context: .
     ports:
       - 9090:9090
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
 networks:
   es-net:
     name: es-net
