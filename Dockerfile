@@ -25,6 +25,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y tshark
 
+# Install tcpdump
+RUN apt-get update && \
+    apt-get install -y tcpdump 
+
 # Copy the source code into the container.
 COPY . .
 

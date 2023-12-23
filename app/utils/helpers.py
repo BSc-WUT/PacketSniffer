@@ -11,8 +11,8 @@ def load_flows() -> dict:
         logs_reader = csv.reader(file_handler)
         try:
             columns: list = next(logs_reader)
-            for log in logs_reader:
-                flow = {column: value for column, value in zip(columns, log)}
+            for network_log in logs_reader:
+                flow = {column: value for column, value in zip(columns, network_log)}
                 yield flow
         except StopIteration:
             log(f"File: {latest_log_file_path} is empty")
