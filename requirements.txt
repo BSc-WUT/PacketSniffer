@@ -3,5 +3,6 @@ scipy==1.4.1
 numpy==1.18
 scapy==2.4.3
 cicflowmeter==0.1.6
+python-dotenv==0.20.0
 pyshark==0.6
 requests==2.31.0
