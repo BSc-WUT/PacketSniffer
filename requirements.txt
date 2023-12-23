@@ -1,5 +1,4 @@
 psutil==5.9.6
-numpy==1.19.5
 scipy==1.4.1
 numpy==1.18
 scapy==2.5.0
