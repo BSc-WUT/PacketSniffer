@@ -8,6 +8,7 @@ from pyshark import LiveCapture
 from .global_vars import raw_logs_path, parsed_logs_path
 from .api_calls import get_active_model_name, predict_flow, save_flow_to_db
 from .helpers import load_flows
+from .logs import log
 
 
 def sniff(
@@ -23,7 +24,7 @@ def sniff(
             f"{str(datetime.now()).split('.')[0].replace(' ', 'T').replace(':', '_')}Z"
         )
         file_path: str = os.path.join(raw_logs_path, f"pkt_{current_date}.pcap")
-        print(f"Sniffing packets, created packets log file: {file_path}")
+        log(f"Sniffing packets, created packets log file: {file_path}", "utils.threads.sniff")
         with open(file_path, "w") as _:
             capture: LiveCapture = LiveCapture(
                 interface=interface, output_file=file_path
@@ -42,11 +43,11 @@ def process_file(file_event: threading.Event, stop_processing: threading.Event, 
         if current_logs_file:
             current_log_file: str = max([os.path.join(raw_logs_path, file_path) for file_path in current_logs_file], key=os.path.getctime)
             output_file_path: str = os.path.join(parsed_logs_path, f"{os.path.split(current_log_file)[1].split('.')[0]}.csv")
-            print(f"Creating csv file: {output_file_path} from logs with cicflowmeter")
+            log(f"Creating csv file: {output_file_path} from logs with cicflowmeter", "utils.threads.process_file")
             subprocess.run(
                 f"cicflowmeter -f {current_log_file} -c {output_file_path}", shell=True
             )
-            print("Created csv file with cicflowmeter")
+            log("Created csv file with cicflowmeter", "utils.threads.process_file")
             if stop_processing.is_set():
                 break
             send_logs.set()
@@ -65,10 +66,10 @@ def send_logs(send_logs_event: threading.Event, stop_processing: threading.Event
         send_logs_event.clear()
         for flow in flows:
             flow['label'] = predict_flow(ml_api_url, active_model_name, flow)
-            print(f"Predicted flow with label: {flow.get('label')}") 
+            log(f"Predicted flow with label: {flow.get('label')}", "utils.threads.send_logs") 
 
             save_flow_to_db(db_api_url, flow)
-            print(f"Saved predicted flow in database")
+            log(f"Saved predicted flow in database", "utils.threads.send_logs")
 
         if stop_processing.is_set():
             break

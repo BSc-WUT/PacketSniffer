@@ -1,6 +1,6 @@
 import requests
 import json
-from pprint import pprint
+from .logs import log
 
 def handle_response(response, url: str) -> None:
     if response.status_code >= 300:
@@ -17,7 +17,8 @@ def get_active_model_name(api_url: str) -> str:
 
 def predict_flow(api_url: str, active_model_name: str, flow: dict) -> str:
     url: str = f'{api_url}/models/predict/{active_model_name}'
-    pprint(flow)
+    log(f'ML_API url: {url}', 'utils.api_calls.predict_flow')
+    log(f'Predicting flow: {flow}', 'utils.api_calls.predict_flow')
     response = requests.post(url, data=json.dumps(flow))
     handle_response(response, url)
     prediction: dict = response.json()
@@ -25,6 +26,7 @@ def predict_flow(api_url: str, active_model_name: str, flow: dict) -> str:
 
 def save_flow_to_db(db_url: str, flow: dict) -> dict:
     url: str = f'{db_url}/network_flows'
+    log(f'DB_API url: {url}', 'utils.api_calls.save_flow_to_db')
     response = requests.post(url, data=json.dumps(flow))
     handle_response(response, url)
     return response.json()
