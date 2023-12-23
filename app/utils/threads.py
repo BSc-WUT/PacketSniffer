@@ -52,11 +52,11 @@ def process_file(file_event: threading.Event, stop_processing: threading.Event, 
                     f"cicflowmeter -f {current_log_file} -c {output_file_path}", shell=True
                 )
                 log("Created csv file with cicflowmeter", "utils.threads.process_file")
+                send_logs.set()
+                if stop_processing.is_set():
+                    break
             except Exception as e:
-                log(f"There was an error: {str(e)}")
-            if stop_processing.is_set():
-                break
-            send_logs.set()
+                log(f"There was an error: {str(e)}", "utils.threads.process_file")
 
 
 def send_logs(send_logs_event: threading.Event, stop_processing: threading.Event) -> None:
