@@ -26,12 +26,15 @@ def sniff(
         file_path: str = os.path.join(raw_logs_path, f"pkt_{current_date}.pcap")
         log(f"Sniffing packets, created packets log file: {file_path}", "utils.threads.sniff")
         with open(file_path, "w") as _:
-            capture: LiveCapture = LiveCapture(
-                interface=interface, output_file=file_path
-            )
-            capture.sniff(packet_count=packets_per_file if packets_per_file else 100)
-        file_event.set()
-    
+            try:
+                capture: LiveCapture = LiveCapture(
+                    interface=interface, output_file=file_path
+                )
+                capture.sniff(packet_count=packets_per_file if packets_per_file else 100)
+                file_event.set()
+            except Exception as e:
+                log(f"Error occured: {str(e)}", "utils.threads.sniff")
+        
     stop_processing.set()
 
 
