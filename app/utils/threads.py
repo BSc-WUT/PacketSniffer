@@ -44,10 +44,13 @@ def process_file(file_event: threading.Event, stop_processing: threading.Event, 
             current_log_file: str = max([os.path.join(raw_logs_path, file_path) for file_path in current_logs_file], key=os.path.getctime)
             output_file_path: str = os.path.join(parsed_logs_path, f"{os.path.split(current_log_file)[1].split('.')[0]}.csv")
             log(f"Creating csv file: {output_file_path} from logs with cicflowmeter", "utils.threads.process_file")
-            subprocess.run(
-                f"cicflowmeter -f {current_log_file} -c {output_file_path}", shell=True
-            )
-            log("Created csv file with cicflowmeter", "utils.threads.process_file")
+            try:
+                subprocess.run(
+                    f"cicflowmeter -f {current_log_file} -c {output_file_path}", shell=True
+                )
+                log("Created csv file with cicflowmeter", "utils.threads.process_file")
+            except Exception as e:
+                log(f"There was an error: {str(e)}")
             if stop_processing.is_set():
                 break
             send_logs.set()
