@@ -60,21 +60,22 @@ def process_file(file_event: threading.Event, stop_processing: threading.Event, 
 
 
 def send_logs(send_logs_event: threading.Event, stop_processing: threading.Event) -> None:
-    load_dotenv()
-    ml_api_url: str = f"{os.getenv('ML_API')}:{os.getenv('ML_API_PORT')}"
-    db_api_url: str = f"{os.getenv('DB_API')}:{os.getenv('DB_API_PORT')}"
-    active_model_name: str = get_active_model_name(ml_api_url)
-    flows = load_flows()
-    if not active_model_name:
-        raise ValueError('No active model')
-    log(f'Active model: {active_model_name}', "utils.threads.send_logs")
     while True:
         send_logs_event.wait()
         send_logs_event.clear()
+        load_dotenv()
+        ml_api_url: str = f"{os.getenv('ML_API')}:{os.getenv('ML_API_PORT')}"
+        db_api_url: str = f"{os.getenv('DB_API')}:{os.getenv('DB_API_PORT')}"
+        log(f'Sending logs to database...', "utils.threads.send_logs")
+        active_model_name: str = get_active_model_name(ml_api_url)
+        flows = load_flows()
+        if not active_model_name:
+            raise ValueError('No active model')
+        log(f'Active model: {active_model_name}', "utils.threads.send_logs")
+
         for flow in flows:
             flow['label'] = predict_flow(ml_api_url, active_model_name, flow)
             log(f"Predicted flow with label: {flow.get('label')}", "utils.threads.send_logs") 
-
             save_flow_to_db(db_api_url, flow)
             log(f"Saved predicted flow in database", "utils.threads.send_logs")
 

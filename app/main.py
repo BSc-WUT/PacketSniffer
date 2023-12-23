@@ -11,7 +11,6 @@ from utils.logs import log
 def main() -> None:
     args = arg_parse()
     file_event = threading.Event()
-    file_event.set()
     stop_processing = threading.Event()
     send_logs_event = threading.Event()
 
