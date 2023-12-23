@@ -61,6 +61,7 @@ def send_logs(send_logs_event: threading.Event, stop_processing: threading.Event
     flows = load_flows()
     if not active_model_name:
         raise ValueError('No active model')
+    log(f'Active model: {active_model_name}', "utils.threads.send_logs")
     while True:
         send_logs_event.wait()
         send_logs_event.clear()
