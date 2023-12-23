@@ -11,8 +11,15 @@ def get_active_model_name(api_url: str) -> str:
     url: str = f'{api_url}/models'
     response = requests.get(url)
     handle_response(response, url)
-    active_model: dict = [model for model in response.json() if model.get('is_active')][0]
-    return active_model.get('name', '')
+    models: list = [model for model in response.json() if model.get('is_active')]
+    if not models:
+        active_model_name: str = response.json()[0].get('name')
+        activate_url: str = f"{api_url}/models/activate/{active_model_name}"
+        activate_response = requests.get(activate_url)
+        handle_response(activate_response, activate_url)
+        return active_model_name
+    else:
+        return models[0].get('name', '')
 
 
 def predict_flow(api_url: str, active_model_name: str, flow: dict) -> str:
